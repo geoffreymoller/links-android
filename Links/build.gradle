@@ -4,6 +4,7 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:0.6.+'
+        classpath 'com.github.jcandksolutions.gradle:android-unit-test:1.0.1'
     }
 }
 apply plugin: 'android'
@@ -22,8 +23,22 @@ android {
     }
 }
 
+apply plugin: 'android-unit-test'
+
 dependencies {
+
 	compile 'com.android.support:appcompat-v7:+'
     compile "com.jakewharton:butterknife:3.0.0"
     compile files('libs/volley.jar')
+
+    testCompile 'junit:junit:4.11'
+    testCompile 'org.robolectric:robolectric:2.1.+'
+    testCompile 'com.squareup:fest-android:1.0.+'
+    testCompile 'org.mockito:mockito-all:1.9.5'
+
+    instrumentTestCompile 'junit:junit:4.11'
+    instrumentTestCompile 'org.robolectric:robolectric:2.1.+'
+    instrumentTestCompile 'com.squareup:fest-android:1.0.+'
+    instrumentTestCompile 'org.mockito:mockito-all:1.9.5'
+
 }
