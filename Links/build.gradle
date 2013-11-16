@@ -21,6 +21,12 @@ android {
         minSdkVersion 7
         targetSdkVersion 18
     }
+
+    sourceSets {
+        instrumentTest {
+            java.srcDir file('src/test/java')
+        }
+    }
 }
 
 apply plugin: 'android-unit-test'
