@@ -36,3 +36,6 @@ local.properties
 *.ipr
 *~
 *.swp
+
+screen*
+test_servers
