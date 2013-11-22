@@ -39,26 +39,10 @@ public class Links {
         return Links;
     }
 
-    public void fetch(RequestHandler handler){
-        final RequestHandler handle = handler;
+    public void fetch(Response.Listener listener, Response.ErrorListener errorListener){
         try {
             RequestQueue queue = Volley.newRequestQueue(mAppContext);
-            JsonObjectRequest req = new JsonObjectRequest(url, null, new Response.Listener<JSONObject> () {
-                @Override
-                public void onResponse(JSONObject response) {
-                    try {
-                        VolleyLog.v("Response:%n %s", response.toString(4));
-                        handle.onResponse(response);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    VolleyLog.e("Error: ", error.getMessage());
-                }
-            });
+            JsonObjectRequest req = new JsonObjectRequest(url, null, listener, errorListener);
             queue.add(req);
         } catch (Exception e) {
             VolleyLog.e(TAG, "Error loading links: ", e);

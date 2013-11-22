@@ -4,9 +4,12 @@ import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
 import com.geoffreymoller.links.model.Links;
-import com.geoffreymoller.links.model.RequestHandler;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -20,14 +23,26 @@ public class LinkListFragment extends ListFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        RequestHandler r = new RequestHandler() {
+        Response.Listener listener = new Response.Listener<JSONObject> () {
             @Override
             public void onResponse(JSONObject response) {
-               Log.i(TAG, response.toString());
+                try {
+                    VolleyLog.v("Response:%n %s", response.toString(4));
+                    Log.i(TAG, response.toString());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         };
 
-        Links.get(getActivity()).fetch(r);
+        Response.ErrorListener errorListener = new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.e("Error: ", error.getMessage());
+            }
+        };
+
+        Links.get(getActivity()).fetch(listener, errorListener);
 
     }
 
