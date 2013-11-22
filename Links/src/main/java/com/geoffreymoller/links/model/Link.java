@@ -15,7 +15,7 @@ public class Link {
 
     private static final String JSON_ID = "id";
     private static final String JSON_TITLE = "title";
-    private static final String JSON_URI = "uri";
+    private static final String JSON_URI = "URI";
     private static final String JSON_DATE = "date";
     private static final String JSON_TAGS = "tags";
 
@@ -27,10 +27,11 @@ public class Link {
 
     public Link(JSONObject json) throws JSONException {
         mId = json.getString(JSON_ID);
-        mTitle = json.getString(JSON_TITLE);
-        mURI = json.getString(JSON_URI);
-        mDate = new Date(json.getLong(JSON_DATE));
-        JSONArray ary = json.getJSONArray(JSON_TAGS);
+        JSONObject value = json.getJSONObject("value");
+        mTitle = value.getString(JSON_TITLE);
+        mURI = value.getString(JSON_URI);
+        mDate = new Date(value.getLong(JSON_DATE));
+        JSONArray ary = value.getJSONArray(JSON_TAGS);
         List<String> list = new ArrayList<String>();
         for(byte i = 0; i < ary.length(); i++){
             list.add(ary.getString(i));

@@ -4,7 +4,6 @@ import android.content.Context;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
@@ -18,25 +17,26 @@ import java.util.UUID;
 /**
  * Created by gmoller on 11/20/13.
  */
-public class Links {
+public class LinkCollection {
 
-    private static final String TAG = "Links";
+    private static final String TAG = "LinkCollection";
     private final String url = "https://geoffreymoller.cloudant.com/collect/_design/uri/_view/uri?descending=true&limit=50";
 
-    private static Links Links;
-    private ArrayList<Link> mLinks;
+    private static LinkCollection LinkCollection;
+    private ArrayList<Link> mLinkCollection;
 
     private Context mAppContext;
 
-    private Links(Context appContext) {
+    private LinkCollection(Context appContext) {
+        mLinkCollection = new ArrayList<Link>();
         mAppContext = appContext;
     }
 
-    public static Links get(Context c) {
-        if (Links == null) {
-            Links = new Links(c.getApplicationContext());
+    public static LinkCollection get(Context c) {
+        if (LinkCollection == null) {
+            LinkCollection = new LinkCollection(c.getApplicationContext());
         }
-        return Links;
+        return LinkCollection;
     }
 
     public void fetch(Response.Listener listener, Response.ErrorListener errorListener){
@@ -45,20 +45,20 @@ public class Links {
             JsonObjectRequest req = new JsonObjectRequest(url, null, listener, errorListener);
             queue.add(req);
         } catch (Exception e) {
-            VolleyLog.e(TAG, "Error loading links: ", e);
+            VolleyLog.e(TAG, "Error loading LinkCollection: ", e);
         }
+    }
+
+    public ArrayList<Link> refresh(JSONObject response) throws JSONException {
+        return LinkCollectionLogic.refresh(response, mLinkCollection);
     }
 
     public Link getLink(UUID id) {
-        for (Link l : mLinks) {
-            if (l.getId().equals(id))
-                return l;
-        }
-        return null;
+        return LinkCollectionLogic.getLink(id, mLinkCollection);
     }
 
     public ArrayList<Link> getLinks() {
-        return mLinks;
+        return mLinkCollection;
     }
 
 
