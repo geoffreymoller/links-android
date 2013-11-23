@@ -35,8 +35,7 @@ public class LinkListFragment extends ListFragment {
             public void onResponse(JSONObject response) {
                 try {
                     VolleyLog.v("Response:%n %s", response.toString(4));
-                    Log.i(TAG, response.toString());
-                    LinkCollection.get(getActivity()).refresh(response);
+                    LinkListFragment.this.onResponse(response);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -54,9 +53,13 @@ public class LinkListFragment extends ListFragment {
 
     }
 
-    private class LinkAdapter extends ArrayAdapter<Link> {
+    public void onResponse(JSONObject response) throws JSONException{
+        LinkCollection.get(getActivity()).refresh(response);
+        LinkAdapter adapter = new LinkAdapter(LinkCollection.get(getActivity()).getLinks());
+        setListAdapter(adapter);
+    }
 
-        //@InjectView(R.id.title) TextView title;
+    private class LinkAdapter extends ArrayAdapter<Link> {
 
         public LinkAdapter(ArrayList<Link> crimes) {
             super(getActivity(), android.R.layout.simple_list_item_1, crimes);
@@ -75,9 +78,12 @@ public class LinkListFragment extends ListFragment {
             TextView titleTextView =
                     (TextView)convertView.findViewById(R.id.link_list_item_titleTextView);
             titleTextView.setText(l.getTitle());
+            TextView dateTextView =
+                    (TextView)convertView.findViewById(R.id.link_list_item_dateTextView);
+            dateTextView.setText(l.getDate().toString());
             TextView URITextView =
                     (TextView)convertView.findViewById(R.id.link_list_item_URITextView);
-            URITextView.setText(l.getDate().toString());
+            URITextView.setText(l.getURI());
 
             return convertView;
         }

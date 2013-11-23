@@ -20,7 +20,7 @@ import java.util.UUID;
 public class LinkCollection {
 
     private static final String TAG = "LinkCollection";
-    private final String url = "https://geoffreymoller.cloudant.com/collect/_design/uri/_view/uri?descending=true&limit=50";
+    private final String url = "https://geoffreymoller.cloudant.com/collect/_design/uri/_view/uri?descending=true&limit=200";
 
     private static LinkCollection LinkCollection;
     private ArrayList<Link> mLinkCollection;
