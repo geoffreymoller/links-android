@@ -1,11 +1,13 @@
 package com.geoffreymoller.links;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.android.volley.Response;
@@ -57,6 +59,14 @@ public class LinkListFragment extends ListFragment {
         LinkCollection.get(getActivity()).refresh(response);
         LinkAdapter adapter = new LinkAdapter(LinkCollection.get(getActivity()).getLinks());
         setListAdapter(adapter);
+    }
+
+    public void onListItemClick(ListView l, View v, int position, long id){
+        Link link = ((LinkAdapter)getListAdapter()).getItem(position);
+        String URI = link.getURI();
+        Intent i = new Intent(Intent.ACTION_VIEW);
+        i.setData(Uri.parse(URI));
+        startActivity(i);
     }
 
     private class LinkAdapter extends ArrayAdapter<Link> {
