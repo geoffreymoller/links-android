@@ -1,16 +1,22 @@
 package com.geoffreymoller.links;
 
 import android.annotation.TargetApi;
+import android.app.ListFragment;
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.TextView;
 
 import com.android.volley.Response;
@@ -27,6 +33,7 @@ import java.util.ArrayList;
 /**
  * Created by gmoller on 11/20/13.
  */
+@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class LinkListFragment extends ListFragment {
 
     private static final String TAG = "LinkListFragment";
@@ -36,6 +43,7 @@ public class LinkListFragment extends ListFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
         LinkCollection.get(getActivity()).fetch(listener, errorListener);
     }
 
@@ -62,6 +70,20 @@ public class LinkListFragment extends ListFragment {
         Intent i = new Intent(Intent.ACTION_VIEW);
         i.setData(Uri.parse(URI));
         startActivity(i);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.options_menu, menu);
+        MenuItem searchItem = menu.findItem(R.id.menu_item_search);
+        SearchView searchView = (SearchView) searchItem.getActionView();
+        searchView.setSubmitButtonEnabled(true);
+        SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
+        if(null!=searchManager ) {
+            searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
+        }
+        searchView.setIconifiedByDefault(false);
     }
 
     private class LinkAdapter extends ArrayAdapter<Link> {
