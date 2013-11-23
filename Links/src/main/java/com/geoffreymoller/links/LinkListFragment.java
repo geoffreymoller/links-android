@@ -31,28 +31,7 @@ public class LinkListFragment extends ListFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        Response.Listener listener = new Response.Listener<JSONObject> () {
-            @Override
-            public void onResponse(JSONObject response) {
-                try {
-                    VolleyLog.v("Response:%n %s", response.toString(4));
-                    LinkListFragment.this.onResponse(response);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        };
-
-        Response.ErrorListener errorListener = new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                VolleyLog.e("Error: ", error.getMessage());
-            }
-        };
-
         LinkCollection.get(getActivity()).fetch(listener, errorListener);
-
     }
 
     public void onResponse(JSONObject response) throws JSONException{
@@ -98,5 +77,26 @@ public class LinkListFragment extends ListFragment {
             return convertView;
         }
     }
+
+    Response.Listener listener = new Response.Listener<JSONObject> () {
+        @Override
+        public void onResponse(JSONObject response) {
+            try {
+                VolleyLog.v("Response:%n %s", response.toString(4));
+                LinkListFragment.this.onResponse(response);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    };
+
+    Response.ErrorListener errorListener = new Response.ErrorListener() {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            VolleyLog.e("Error: ", error.getMessage());
+        }
+    };
+
+
 
 }
