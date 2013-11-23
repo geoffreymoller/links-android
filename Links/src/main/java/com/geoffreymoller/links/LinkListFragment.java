@@ -1,9 +1,12 @@
 package com.geoffreymoller.links;
 
+import android.annotation.TargetApi;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -27,11 +30,24 @@ import java.util.ArrayList;
 public class LinkListFragment extends ListFragment {
 
     private static final String TAG = "LinkListFragment";
+    private String linkTag = "";
 
+    @TargetApi(11)
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         LinkCollection.get(getActivity()).fetch(listener, errorListener);
+    }
+
+    public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState){
+       View v = super.onCreateView(inflater, parent, savedInstanceState);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            getActivity().getActionBar().setTitle(R.string.title);
+            if (!(linkTag.length() == 0)){
+                getActivity().getActionBar().setSubtitle("Tag: " + linkTag);
+            }
+        }
+       return v;
     }
 
     public void onResponse(JSONObject response) throws JSONException{
