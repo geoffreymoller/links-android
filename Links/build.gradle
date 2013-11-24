@@ -33,6 +33,7 @@ apply plugin: 'android-unit-test'
 
 dependencies {
 
+    compile group: 'com.google.guava', name: 'guava', version: '15.0'
 	compile 'com.android.support:appcompat-v7:+'
     compile "com.jakewharton:butterknife:3.0.0"
     compile files('libs/volley.jar')
