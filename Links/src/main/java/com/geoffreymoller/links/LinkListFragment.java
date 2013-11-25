@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -49,6 +48,10 @@ public class LinkListFragment extends ListFragment {
         if (Intent.ACTION_SEARCH.equals(i.getAction())) {
             query = i.getStringExtra(SearchManager.QUERY);
         }
+        search(query);
+    }
+
+    public void search(String query){
         LinkCollection.get(getActivity()).fetch(query, listener, errorListener);
     }
 
