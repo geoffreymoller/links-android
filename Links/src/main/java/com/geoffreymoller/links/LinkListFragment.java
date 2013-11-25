@@ -76,14 +76,12 @@ public class LinkListFragment extends ListFragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.options_menu, menu);
-        MenuItem searchItem = menu.findItem(R.id.menu_item_search);
-        SearchView searchView = (SearchView) searchItem.getActionView();
-        searchView.setSubmitButtonEnabled(true);
-        SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
-        if(null!=searchManager ) {
-            searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
-        }
-        searchView.setIconifiedByDefault(false);
+        SearchManager searchManager =
+                (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView =
+                (SearchView) menu.findItem(R.id.search).getActionView();
+        searchView.setSearchableInfo(
+                searchManager.getSearchableInfo(getActivity().getComponentName()));
     }
 
     private class LinkAdapter extends ArrayAdapter<Link> {
