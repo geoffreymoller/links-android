@@ -44,7 +44,12 @@ public class LinkListFragment extends ListFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        LinkCollection.get(getActivity()).fetch(listener, errorListener);
+        Intent i = getActivity().getIntent();
+        String query = "";
+        if (Intent.ACTION_SEARCH.equals(i.getAction())) {
+            query = i.getStringExtra(SearchManager.QUERY);
+        }
+        LinkCollection.get(getActivity()).fetch(query, listener, errorListener);
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState){
