@@ -38,6 +38,8 @@ public class LinkListFragment extends ListFragment {
 
     private static final String TAG = "LinkListFragment";
     private String linkTag = "";
+    private LinkAdapter adapter;
+    private ArrayList<Link> links;
 
     @TargetApi(11)
     @Override
@@ -56,6 +58,24 @@ public class LinkListFragment extends ListFragment {
         LinkCollection.get(getActivity()).fetch(query, listener, errorListener);
     }
 
+    public void onResponse(JSONObject response) throws JSONException{
+        LinkCollection collection = LinkCollection.get(getActivity());
+        collection.refresh(response);
+        links = collection.getLinks();
+        if(adapter == null){
+            adapter = new LinkAdapter(links);
+            setListAdapter(adapter);
+        }
+        else {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    adapter.notifyDataSetChanged();
+                }
+            });
+        }
+    }
+
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState){
        View v = super.onCreateView(inflater, parent, savedInstanceState);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
@@ -65,12 +85,6 @@ public class LinkListFragment extends ListFragment {
             }
         }
        return v;
-    }
-
-    public void onResponse(JSONObject response) throws JSONException{
-        LinkCollection.get(getActivity()).refresh(response);
-        LinkAdapter adapter = new LinkAdapter(LinkCollection.get(getActivity()).getLinks());
-        setListAdapter(adapter);
     }
 
     public void onListItemClick(ListView l, View v, int position, long id){
