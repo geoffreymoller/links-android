@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -90,6 +91,15 @@ public class LinkListFragment extends ListFragment {
                 (SearchView) menu.findItem(R.id.search).getActionView();
         searchView.setSearchableInfo(
                 searchManager.getSearchableInfo(getActivity().getComponentName()));
+    }
+
+    @Override public boolean onOptionsItemSelected(MenuItem item){
+       switch (item.getItemId()){
+           case R.id.refresh:
+                return true;
+           default:
+                return true;
+       }
     }
 
     private class LinkAdapter extends ArrayAdapter<Link> {
