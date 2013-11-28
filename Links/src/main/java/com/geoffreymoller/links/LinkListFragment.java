@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -62,6 +61,11 @@ public class LinkListFragment extends ListFragment {
         query = searchQuery;
         if (!(query.length() == 0)){
             getActivity().getActionBar().setSubtitle("Tag: " + query);
+            getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+        else{
+            getActivity().getActionBar().setSubtitle("Tag: All");
+            getActivity().getActionBar().setDisplayHomeAsUpEnabled(false);
         }
         LinkCollection.get(getActivity()).fetch(query, listener, errorListener);
         return true;
@@ -139,6 +143,8 @@ public class LinkListFragment extends ListFragment {
 
     @Override public boolean onOptionsItemSelected(MenuItem item){
        switch (item.getItemId()){
+           case android.R.id.home:
+               return search("");
            case R.id.refresh:
                 updateRefreshButton(true);
                 return search(query);
