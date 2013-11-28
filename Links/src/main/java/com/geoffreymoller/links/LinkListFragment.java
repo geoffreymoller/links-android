@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -38,7 +39,7 @@ import java.util.Comparator;
 public class LinkListFragment extends ListFragment {
 
     private static final String TAG = "LinkListFragment";
-    private String linkTag = "";
+    private String query = "";
     private LinkAdapter adapter;
     private ArrayList<Link> links;
     MenuItem searchMenuItem;
@@ -56,11 +57,13 @@ public class LinkListFragment extends ListFragment {
         search(query);
     }
 
-    public void search(String query){
+    public boolean search(String searchQuery){
+        query = searchQuery;
         if (!(query.length() == 0)){
             getActivity().getActionBar().setSubtitle("Tag: " + query);
         }
         LinkCollection.get(getActivity()).fetch(query, listener, errorListener);
+        return true;
     }
 
     public void onResponse(JSONObject response) throws JSONException{
@@ -129,7 +132,7 @@ public class LinkListFragment extends ListFragment {
     @Override public boolean onOptionsItemSelected(MenuItem item){
        switch (item.getItemId()){
            case R.id.refresh:
-                return true;
+                return search(query);
            default:
                 return true;
        }
