@@ -8,7 +8,6 @@ public class MainActivity extends SingleFragmentActivity {
 
     //TODO - spinner
     //TODO - refresh current view
-    //TODO - sorted results
     //TODO - home button to return to main search
 
     private static final String TAG = "MainActivity";
