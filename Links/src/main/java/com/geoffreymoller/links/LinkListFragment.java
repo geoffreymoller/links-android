@@ -41,6 +41,7 @@ public class LinkListFragment extends ListFragment {
     private String linkTag = "";
     private LinkAdapter adapter;
     private ArrayList<Link> links;
+    MenuItem searchMenuItem;
 
     @TargetApi(11)
     @Override
@@ -56,6 +57,9 @@ public class LinkListFragment extends ListFragment {
     }
 
     public void search(String query){
+        if (!(query.length() == 0)){
+            getActivity().getActionBar().setSubtitle("Tag: " + query);
+        }
         LinkCollection.get(getActivity()).fetch(query, listener, errorListener);
     }
 
@@ -63,6 +67,11 @@ public class LinkListFragment extends ListFragment {
         LinkCollection collection = LinkCollection.get(getActivity());
         collection.refresh(response);
         links = collection.getLinks();
+
+        if(searchMenuItem != null){
+            searchMenuItem.collapseActionView();
+        }
+
         if(adapter == null){
             adapter = new LinkAdapter(links);
             adapter.sort(getComparator());
@@ -92,9 +101,6 @@ public class LinkListFragment extends ListFragment {
        View v = super.onCreateView(inflater, parent, savedInstanceState);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             getActivity().getActionBar().setTitle(R.string.title);
-            if (!(linkTag.length() == 0)){
-                getActivity().getActionBar().setSubtitle("Tag: " + linkTag);
-            }
         }
        return v;
     }
@@ -117,6 +123,7 @@ public class LinkListFragment extends ListFragment {
                 (SearchView) menu.findItem(R.id.search).getActionView();
         searchView.setSearchableInfo(
                 searchManager.getSearchableInfo(getActivity().getComponentName()));
+        searchMenuItem = menu.findItem(R.id.search);
     }
 
     @Override public boolean onOptionsItemSelected(MenuItem item){
