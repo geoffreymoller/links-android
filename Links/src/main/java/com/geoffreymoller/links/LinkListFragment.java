@@ -29,6 +29,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 
 /**
  * Created by gmoller on 11/20/13.
@@ -64,16 +65,27 @@ public class LinkListFragment extends ListFragment {
         links = collection.getLinks();
         if(adapter == null){
             adapter = new LinkAdapter(links);
+            adapter.sort(getComparator());
             setListAdapter(adapter);
         }
         else {
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    adapter.sort(getComparator());
                     adapter.notifyDataSetChanged();
                 }
             });
         }
+    }
+
+    public Comparator<Link> getComparator(){
+        return new Comparator<Link>() {
+            @Override
+            public int compare(Link lhs, Link rhs) {
+                return rhs.getDate().compareTo(lhs.getDate());
+            }
+        };
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState){
