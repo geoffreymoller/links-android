@@ -8,14 +8,17 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -43,6 +46,8 @@ public class LinkListFragment extends ListFragment {
     private LinkAdapter adapter;
     private ArrayList<Link> links;
     MenuItem searchMenuItem;
+    MenuItem refreshMenuItem;
+    ImageView refreshMenuActionItem;
 
     @TargetApi(11)
     @Override
@@ -71,9 +76,8 @@ public class LinkListFragment extends ListFragment {
         collection.refresh(response);
         links = collection.getLinks();
 
-        if(searchMenuItem != null){
-            searchMenuItem.collapseActionView();
-        }
+        hideSearch();
+        stopRefreshAnimation();
 
         if(adapter == null){
             adapter = new LinkAdapter(links);
@@ -127,11 +131,39 @@ public class LinkListFragment extends ListFragment {
         searchView.setSearchableInfo(
                 searchManager.getSearchableInfo(getActivity().getComponentName()));
         searchMenuItem = menu.findItem(R.id.search);
+        searchMenuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                stopRefreshAnimation();
+                return false;
+            }
+        });
+    }
+
+    private void stopRefreshAnimation(){
+        if(refreshMenuActionItem != null && refreshMenuActionItem.getAnimation() != null && refreshMenuActionItem.getAnimation().hasStarted()){
+            refreshMenuActionItem.clearAnimation();
+            refreshMenuItem.collapseActionView();
+        }
+    }
+
+    private void hideSearch(){
+        if(searchMenuItem != null){
+            searchMenuItem.collapseActionView();
+        }
     }
 
     @Override public boolean onOptionsItemSelected(MenuItem item){
        switch (item.getItemId()){
            case R.id.refresh:
+                LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.menu_item_refresh, null);
+                refreshMenuItem = item;
+                refreshMenuActionItem = (ImageView) layout.findViewById(R.id.refresh_menu_action_item);
+                Animation rotation = AnimationUtils.loadAnimation(getActivity(), R.anim.rotate);
+                rotation.setRepeatCount(Animation.INFINITE);
+                refreshMenuActionItem.startAnimation(rotation);
+                refreshMenuItem.setActionView(refreshMenuActionItem);
                 return search(query);
            default:
                 return true;
@@ -140,8 +172,8 @@ public class LinkListFragment extends ListFragment {
 
     private class LinkAdapter extends ArrayAdapter<Link> {
 
-        public LinkAdapter(ArrayList<Link> crimes) {
-            super(getActivity(), android.R.layout.simple_list_item_1, crimes);
+        public LinkAdapter(ArrayList<Link> links) {
+            super(getActivity(), android.R.layout.simple_list_item_1, links);
         }
 
         @Override
