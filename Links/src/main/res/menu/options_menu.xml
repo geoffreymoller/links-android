@@ -1,11 +1,13 @@
 <menu  xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item android:id="@+id/refresh"
+          android:alphabeticShortcut="r"
           android:title="@string/refresh_title"
           android:icon="@drawable/ic_menu_refresh"
           android:showAsAction="always" />
 
     <item android:id="@+id/search"
+          android:alphabeticShortcut="s"
           android:title="@string/search_title"
           android:icon="@drawable/ic_search"
           android:showAsAction="collapseActionView|ifRoom"

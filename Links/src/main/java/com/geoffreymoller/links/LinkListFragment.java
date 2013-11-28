@@ -43,6 +43,7 @@ public class LinkListFragment extends ListFragment {
     private LinkAdapter adapter;
     private ArrayList<Link> links;
     MenuItem searchMenuItem;
+    private Menu optionsMenu;
 
     @TargetApi(11)
     @Override
@@ -67,13 +68,12 @@ public class LinkListFragment extends ListFragment {
     }
 
     public void onResponse(JSONObject response) throws JSONException{
+
+        paintUI();
+
         LinkCollection collection = LinkCollection.get(getActivity());
         collection.refresh(response);
         links = collection.getLinks();
-
-        if(searchMenuItem != null){
-            searchMenuItem.collapseActionView();
-        }
 
         if(adapter == null){
             adapter = new LinkAdapter(links);
@@ -89,6 +89,13 @@ public class LinkListFragment extends ListFragment {
                 }
             });
         }
+    }
+
+    private void paintUI(){
+        if(searchMenuItem != null){
+            searchMenuItem.collapseActionView();
+        }
+        updateRefreshButton(false);
     }
 
     public Comparator<Link> getComparator(){
@@ -119,6 +126,7 @@ public class LinkListFragment extends ListFragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
+        this.optionsMenu = menu;
         inflater.inflate(R.menu.options_menu, menu);
         SearchManager searchManager =
                 (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
@@ -132,10 +140,24 @@ public class LinkListFragment extends ListFragment {
     @Override public boolean onOptionsItemSelected(MenuItem item){
        switch (item.getItemId()){
            case R.id.refresh:
+                updateRefreshButton(true);
                 return search(query);
            default:
                 return true;
        }
+    }
+
+    public void updateRefreshButton(final boolean refreshing) {
+        if (optionsMenu != null) {
+            final MenuItem refreshItem = optionsMenu.findItem(R.id.refresh);
+            if (refreshItem != null) {
+                if (refreshing) {
+                    refreshItem.setActionView(R.layout.actionbar_indeterminate_progress);
+                } else {
+                    refreshItem.setActionView(null);
+                }
+            }
+        }
     }
 
     private class LinkAdapter extends ArrayAdapter<Link> {
