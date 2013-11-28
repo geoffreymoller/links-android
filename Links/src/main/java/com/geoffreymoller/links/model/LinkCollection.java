@@ -58,8 +58,18 @@ public class LinkCollection {
         Map<String,String> map = ImmutableMap.of("main", "uri/_view/uri?descending=true&limit=200",
                 "tag", "tags/_view/tags?descending=true&keys=");
         if(query.length() > 0){
+            String out = "";
+            String[] split = query.split(",");
+            int i = 0;
+            for(String key: split){
+                out += "\"" + key + "\"";
+                if(i != split.length - 1){
+                    out += ",";
+                }
+                i++;
+            }
             uri += map.get("tag");
-            uri += "[\"" + query + "\"]";
+            uri += "[" + out + "]";
         }
         else {
             uri += map.get("main");
