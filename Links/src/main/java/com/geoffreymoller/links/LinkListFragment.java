@@ -38,10 +38,12 @@ import java.util.Comparator;
 public class LinkListFragment extends ListFragment {
 
     private static final String TAG = "LinkListFragment";
+    private static final int PAINT_MODE_RESPONSE = 1;
+    private static final int PAINT_MODE_SEARCH = 2;
     private String query = "";
     private LinkAdapter adapter;
     private ArrayList<Link> links;
-    MenuItem searchMenuItem;
+    private MenuItem searchMenuItem;
     private Menu optionsMenu;
 
     @TargetApi(11)
@@ -59,21 +61,14 @@ public class LinkListFragment extends ListFragment {
 
     public boolean search(String searchQuery){
         query = searchQuery;
-        if (!(query.length() == 0)){
-            getActivity().getActionBar().setSubtitle("Tag: " + query);
-            getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
-        }
-        else{
-            getActivity().getActionBar().setSubtitle("Tag: All");
-            getActivity().getActionBar().setDisplayHomeAsUpEnabled(false);
-        }
+        paintUI(PAINT_MODE_SEARCH);
         LinkCollection.get(getActivity()).fetch(query, listener, errorListener);
         return true;
     }
 
     public void onResponse(JSONObject response) throws JSONException{
 
-        paintUI();
+        paintUI(PAINT_MODE_RESPONSE);
 
         LinkCollection collection = LinkCollection.get(getActivity());
         collection.refresh(response);
@@ -93,13 +88,6 @@ public class LinkListFragment extends ListFragment {
                 }
             });
         }
-    }
-
-    private void paintUI(){
-        if(searchMenuItem != null){
-            searchMenuItem.collapseActionView();
-        }
-        updateRefreshButton(false);
     }
 
     public Comparator<Link> getComparator(){
@@ -215,6 +203,26 @@ public class LinkListFragment extends ListFragment {
         }
     };
 
-
+    private void paintUI(Integer mode){
+        switch (mode){
+            case PAINT_MODE_RESPONSE:
+                if(searchMenuItem != null){
+                    searchMenuItem.collapseActionView();
+                }
+                updateRefreshButton(false);
+                break;
+            case PAINT_MODE_SEARCH:
+                updateRefreshButton(true);
+                if (!(query.length() == 0)){
+                    getActivity().getActionBar().setSubtitle("Tag: " + query);
+                    getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
+                }
+                else{
+                    getActivity().getActionBar().setSubtitle("Tag: All");
+                    getActivity().getActionBar().setDisplayHomeAsUpEnabled(false);
+                }
+                break;
+        }
+    }
 
 }

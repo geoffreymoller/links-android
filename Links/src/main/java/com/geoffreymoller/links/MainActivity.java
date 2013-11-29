@@ -6,9 +6,8 @@ import android.content.Intent;
 
 public class MainActivity extends SingleFragmentActivity {
 
-    //TODO - spinner
-    //TODO - refresh current view
-    //TODO - home button to return to main search
+    //TODO - webview
+    //TODO - fix onResume Activity crash
 
     private static final String TAG = "MainActivity";
 
