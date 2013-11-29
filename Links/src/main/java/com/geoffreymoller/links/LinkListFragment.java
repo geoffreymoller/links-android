@@ -109,9 +109,16 @@ public class LinkListFragment extends ListFragment {
 
     public void onListItemClick(ListView l, View v, int position, long id){
         Link link = ((LinkAdapter)getListAdapter()).getItem(position);
+        Intent i;
         String URI = link.getURI();
-        Intent i = new Intent(Intent.ACTION_VIEW);
-        i.setData(Uri.parse(URI));
+        if(true){ //TODO - build settings activity, add Browse section
+            i = new Intent(Intent.ACTION_VIEW);
+            i.setData(Uri.parse(URI));
+        } else {
+            //TODO - progressbar
+            i = new Intent(getActivity(), WebActivity.class);
+            i.putExtra("url", URI);
+        }
         startActivity(i);
     }
 

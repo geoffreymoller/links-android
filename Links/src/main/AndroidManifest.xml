@@ -34,6 +34,10 @@
                 <data android:mimeType="text/*" />
             </intent-filter>
         </activity>
+        <activity
+            android:label="Links"
+            android:name="com.geoffreymoller.links.WebActivity">
+        </activity>
     </application>
 
 </manifest>
