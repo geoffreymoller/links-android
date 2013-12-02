@@ -7,6 +7,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.geoffreymoller.links.LinksApplication;
 import com.google.common.collect.ImmutableMap;
 
 import org.json.JSONException;
@@ -45,7 +46,7 @@ public class LinkCollection {
     public void fetch(String query, Response.Listener listener, Response.ErrorListener errorListener){
         try {
             url = getURL(query);
-            RequestQueue queue = Volley.newRequestQueue(mAppContext);
+            RequestQueue queue = LinksApplication.mRequestQueue;
             JsonObjectRequest req = new JsonObjectRequest(url, null, listener, errorListener);
             queue.add(req);
         } catch (Exception e) {
