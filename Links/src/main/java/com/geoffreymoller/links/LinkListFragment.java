@@ -40,11 +40,16 @@ public class LinkListFragment extends ListFragment {
     private static final String TAG = "LinkListFragment";
     private static final int PAINT_MODE_RESPONSE = 1;
     private static final int PAINT_MODE_SEARCH = 2;
+
     private String query = "";
     private LinkAdapter adapter;
     private ArrayList<Link> links;
     private MenuItem searchMenuItem;
     private Menu optionsMenu;
+
+    public String getQuery() {
+        return query != null ? query : "";
+    }
 
     @TargetApi(11)
     @Override
@@ -57,6 +62,12 @@ public class LinkListFragment extends ListFragment {
             query = i.getStringExtra(SearchManager.QUERY);
         }
         search(query);
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        query = getQuery();
     }
 
     public boolean search(String searchQuery){
